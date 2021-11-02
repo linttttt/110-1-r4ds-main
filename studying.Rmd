@@ -1,0 +1,137 @@
+---
+title: "studying"
+output: html_notebook
+---
+Element Values (III): replacement
+```{r}
+JohnsFamily <-
+  list(
+    name = "John", 
+    age = 35,
+    spouse = list(
+      name = "Mary", 
+      age = 32),
+    children = list(
+      list(
+        name = "Bill", 
+        age = 5),
+      list(
+        name = "Jane", 
+        age = 3)
+    )
+  )
+```
+
+```{r}
+JohnsFamilyCopy <- JohnsFamily
+
+JohnsFamilyCopy[[1]] <- "Watson" 
+JohnsFamilyCopy[[1]]
+JohnsFamilyCopy[["name"]] <- "John" 
+JohnsFamilyCopy[[1]] 
+```
+
+```{r}
+
+JohnsFamilyCopy <- JohnsFamily
+JohnsFamilyCopy[["name"]] <- "John" 
+JohnsFamilyCopy[["age"]] <- 37 
+```
+
+```{r}
+JohnsFamilyCopy[c("name", "age")] <- 
+  list(name="Watson", age=37) 
+JohnsFamilyCopy[c(1,2)]
+```
+```{r}
+JohnsFamilyCopy[c(1,2)] <- 
+  list("Dickens", 32) 
+JohnsFamilyCopy[c(1,2)]
+```
+
+```{r}
+JohnsFamilyCopy$spouse$age <- 33
+JohnsFamilyCopy$children[[1]]$name <- "Gary"
+JohnsFamilyCopy$spouse$age
+JohnsFamilyCopy$children[[1]]$name
+```
+
+Element Values (IV): add element values (1)
+```{r}
+example1 <- c("John", "Mary", "Bill")
+
+example1[[4]] <- "Ken"
+```
+
+```{r}
+# update only element values
+example1[c(4,5)] <- c("Jack", "person5"="Janem")
+example1
+```
+
+```{r}
+# update element values and element names
+example1 <- c("John", "Mary", "Bill")
+example1[c("person4","person5")] <- c("Jack", "Janem")
+example1
+```
+
+```{r}
+example1[c(7,8)] <- c("person7"="Jack", "Janem")
+example1[c(7,8)] <- c("person7"="Jack", "Janem")
+example1
+```
+```{r}
+example1[c(4,5)] <- c("Jack", "person5"="Janem")
+example1
+```
+
+```{r}
+JohnsFamilyCopy2 <- JohnsFamily
+newborn <- list(name="Lisa", age=0)
+JohnsFamilyCopy2$children[[3]] <- newborn
+```
+
+Element Values (IV): add element values (2)
+```{r}
+height <- c("001"=177, "002"=183, "003"=173)
+rm(height)
+#'height' not found
+
+```
+
+```{r}
+height <-numeric(0)
+# declaration makes name call on height have meaning
+height[["001"]] <- 177
+height[["002"]] <- 183
+height[["003"]] <- 173
+height
+```
+
+Element Values (IV): add element values (3)
+```{r}
+course1 <- 
+  list(
+    name="programming for data science",
+    credit=2
+  )
+course2 <- 
+  list(
+    name="account*ing",
+    credit=2
+  )
+course3 <- 
+  list(
+    name="philosophy",
+    credit=3
+  )
+```
+
+```{r}
+classSchedule <- list()
+classSchedule$yr108$semester1[[1]] <- course1
+classSchedule$yr108$semester1[[2]] <- course2
+classSchedule$yr108$semester2[[1]] <- course3
+classSchedule
+```

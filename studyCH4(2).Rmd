@@ -139,12 +139,13 @@ survey_fbf2 <-
 
 df_survey_fbf2 <- 
   list2DF(survey_fbf2)
-
+df_survey_fbf2
 ```
 
 ```{r}
 survey_fbf$age
 df_survey_fbf <- data.frame(survey_fbf)
+df_survey_fbf
 df_survey_fbf$age
 
 survey_fbf2$age
@@ -173,6 +174,33 @@ commonClasses$data_frame[c(1,2), c("age", "income")] <- data.frame(
 commonClasses$data_frame[, "isStudent"] <- data.frame(isStudent=c(T, T, F, T))
 commonClasses$data_frame
 ```
+
+EX4.3
+```{r}
+dfExercise <- list()
+dataSet1 <- list(
+  name=c("John", "Mary", "Ben"),
+  age=c(33, 45, NA)
+)
+dfExercise$data1 <-
+  data.frame(
+    dataSet1
+  )
+dataSet1$children <- list(
+  list(list(name = "Jane", age = 2), NA),
+  list(list(name = "Bill", age = 3),
+       list(name = "Ken", age = 0)),
+  list(list(name = "William", age = 10), NA)
+)
+
+dataSet1$children[[1]][[1]]
+dataSet1$children[[2]][[1]]
+dataSet1$children[[2]][[2]]
+dataSet1$children[[3]][[1]]
+
+dfExercise$data2 <- data.frame(dataSet1$children)
+```
+
 
 
 4.2.5 Matrix

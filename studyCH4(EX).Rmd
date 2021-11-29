@@ -1,0 +1,66 @@
+EX 4.5
+```{r}
+participations <- 
+list('session 3',c("session 1", "session 2", "session 3"),'session 3',c("session 2", "session 1"),c("session 3", "session 1"),c("session 3", "session 2", "session 1"),'session 2','session 1',c("session 2", "session 1", "session 3"),c("session 3", "session 1", "session 2"))
+
+participations[[1]] 
+participations[[2]]
+participations_result <- unlist(participations)
+table(participations_result)
+```
+
+EX4.6
+```{r}
+numbers <- factor(
+  c('參','貮','貮','貮','壹','貮','參','貮','參','參'),
+  levels = c('壹','貮','參')
+)
+
+sum(as.numeric(numbers))
+```
+
+EX4.7
+```{r}
+persians_source <- factor(
+  c('۶','۹','۸','۹','۶','۸','۸','۵','۹','۹'),
+  levels = c("۵", "۶", "۷", "۸", "۹")
+)
+
+persians_result <- as.numeric(persians_source) + 4
+as.numeric(persians_result)
+
+sum(persians_result)
+```
+
+EX4.8
+```{r}
+letter_grades <- c("C", "B-", "B", "B+", "A-", "A", "A+")
+numeric_grades <- c(2, 2.5, 3, 3.5, 4, 4.5, 5)
+studentGrades <- c('B','A','A+','B+','A-','B','B-','B','A+','B+','C','B-','B-','B','C','C','B+','B','B+','B')
+
+studentLetterGrades <- {
+  step1 <- as.numeric(
+    factor(
+      studentGrades,
+      levels = letter_grades
+  )
+  )
+
+  step2 =
+      factor(
+      (step1 + 3) * 0.5 ,
+      levels = numeric_grades
+    )
+}
+step1
+step2
+c(2, 2.5, 3, 3.5, 4, 4.5, 5)[step1]
+```
+
+
+
+
+
+
+
+

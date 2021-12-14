@@ -67,7 +67,7 @@ googlesheets4::read_sheet(
 ) -> johnDoe$data
 
 johnDoe$data |> View()
-yearPick <- johnDoe$data[["發現年"]] >= 101
+yearPick <- johnDoe$data[["發現年"]] > 101
 yearPick |>
   na.omit() |>
   sum()
@@ -124,5 +124,53 @@ drugSetPick |>
   sum()
 ```
 
+EX4.13
+```{r}
+johnDoe <- list()
+johnDoe$source[[1]] <- "https://www.moj.gov.tw/2204/2771/2773/76135/post"
+johnDoe$source[[2]] <- "https://docs.google.com/spreadsheets/d/1g2AMop133lCAsmdPhsH3lA-tjiY5fkGIqXqwdknwEVk/edit#gid=640486514"
+googlesheets4::read_sheet(
+  johnDoe$source[[2]]
+) -> johnDoe$data
+johnDoe$data |> View()
 
+# 1.
+pick1 <- !is.na(johnDoe$data$通報機關名稱)
+subsample1 <- johnDoe$data[pick1, ]
+View(subsample)
+
+# 2.
+pick2 <- johnDoe$data$通報機關名稱 == '海巡隊'
+johnDoe$data$死亡方式描述[pick2]
+table(johnDoe$data$死亡方式描述[pick2])
+
+# 3.
+pick3 <- (johnDoe$data$死亡方式描述 == '不詳'
+         | johnDoe$data$死亡方式描述 == '他殺')
+johnDoe$data$發現縣市[pick3]
+table(johnDoe$data$發現縣市[pick3])
+```
+
+EX4.14
+```{r}
+fraud <- list()
+fraud$source[[1]] <- "https://data.gov.tw/dataset/78432"
+fraud$source[[2]] <- "https://data.moi.gov.tw/MoiOD/System/DownloadFile.aspx?DATA=7F6BE616-8CE6-449E-8620-5F627C22AA0D"
+fraud$data <- readr::read_csv(fraud$source[[2]])
+fraud$data |> View()
+
+# 1.
+fraudDate <-lubridate::ymd(fraud$data$通報日期)
+any(is.na(fraudDate))
+
+# 2.
+fraud_pick2 <- fraudDate >= lubridate::ymd('2019-01-01')
+sum(fraud_pick2, na.rm = T)
+
+# 3.
+fraud_pick3 <- (fraudDate >= lubridate::ymd('2019-01-01')
+             & fraudDate < lubridate::ymd('2021-01-01')
+              )
+sum(fraud_pick3, na.rm = T)
+```
 

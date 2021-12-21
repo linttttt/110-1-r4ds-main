@@ -1,3 +1,93 @@
+EX4.1
+```{r}
+customerExperience <- c('very happy','very happy','satisfied','satisfied','satisfied','very happy','bad','bad','satisfied','satisfied','bad','happy','happy','very happy','happy','happy','satisfied','very happy','very happy','satisfied','satisfied','very happy','satisfied','bad','very happy','very bad','very happy','bad','bad','very bad')
+
+customerExperience_fct <- factor(customerExperience)
+class(customerExperience_fct)
+table(customerExperience_fct)
+
+customerExperience_fct_levelsSetup <- factor(customerExperience, 
+         levels = c('very bad', 
+                    'bad','satisfied','happy','very happy')
+      )
+class(customerExperience_fct_levelsSetup)
+
+customerExperience_fct_levelsSetup_ordered <-
+   factor(customerExperience_fct_levelsSetup, 
+   levels = c('very bad','bad','satisfied','happy','very happy'),
+   ordered = T
+      )
+
+rev(c('very bad','bad','satisfied','happy','very happy'))
+
+
+table(customerExperience_fct_levelsSetup_ordered)
+class(customerExperience_fct_levelsSetup_ordered)
+
+customerExperience_fct_levelsSetup_ordered[[1]]
+customerExperience_fct_levelsSetup_ordered[[1]] < 'happy'
+customerExperience_fct_levelsSetup_ordered[[1]] > 'happy'
+```
+
+EX4.2
+```{r}
+subsidiaries <- list()
+subsidiaries$boston <- c("2020 Oct. 13 15:00:00", "2019 Apr. 10 09:30:00")
+subsidiaries$mykonos <- c("14 Jan., 2021 03:27:00", "8 Aug., 2020 11:20:00")
+
+dateTime_boston <- 
+  lubridate::ymd_hms(
+    subsidiaries$boston,
+    tz="America/New_York")
+dateTime_mykonos <- 
+  lubridate::dmy_hms(
+    subsidiaries$mykonos,
+    tz="Europe/Athens")
+dateTime_boston_atIndia <-
+  lubridate::with_tz(
+    dateTime_boston,
+    tz="Asia/Calcutta"
+  )
+dateTime_mykonos_atIndia <-
+  lubridate::with_tz(
+    dateTime_mykonos,
+    tz="Asia/Calcutta"
+  )
+
+subsidiaries_dayTime <- list()
+subsidiaries_dayTime <- c(
+  dateTime_boston_atIndia,
+  dateTime_mykonos_atIndia
+)
+subsidiaries_dayTime
+```
+
+EX4.3
+```{r}
+dfExercise <- list()
+dataSet1 <- list(
+  name=c("John", "Mary", "Ben"),
+  age=c(33, 45, NA)
+)
+dfExercise$data1 <-
+  data.frame(
+    dataSet1
+  )
+dataSet1$children <- list(
+  list(list(name = "Jane", age = 2), NA),
+  list(list(name = "Bill", age = 3),
+       list(name = "Ken", age = 0)),
+  list(list(name = "William", age = 10), NA)
+)
+
+dataSet1$children[[1]][[1]]
+dataSet1$children[[2]][[1]]
+dataSet1$children[[2]][[2]]
+dataSet1$children[[3]][[1]]
+
+dfExercise$data2 <- data.frame(dataSet1$children)
+```
+
 EX 4.5
 ```{r}
 participations <- 
@@ -172,5 +262,90 @@ fraud_pick3 <- (fraudDate >= lubridate::ymd('2019-01-01')
              & fraudDate < lubridate::ymd('2021-01-01')
               )
 sum(fraud_pick3, na.rm = T)
+```
+
+EX4.15
+```{r}
+johnDoe <- list()
+johnDoe$source[[1]] <- "https://www.moj.gov.tw/2204/2771/2773/76135/post"
+johnDoe$source[[2]] <- "https://docs.google.com/spreadsheets/d/1g2AMop133lCAsmdPhsH3lA-tjiY5fkGIqXqwdknwEVk/edit?usp=sharing"
+googlesheets4::read_sheet(
+  johnDoe$source[[2]]
+) -> johnDoe$data
+
+johnDoe$data |> View()
+
+# 1.
+pick_john <- 
+  stringr::str_detect(
+    johnDoe$data$通報機關名稱, "海巡隊"
+    )
+subsample_john <- johnDoe$data[which(pick_john), ]
+View(subsample_john)
+
+# 2.
+table(johnDoe$data$通報機關名稱[which(pick_john)])
+```
+
+EX4.16
+```{r}
+johnDoe$data |> View()
+
+# 1.
+df_dates =
+  data.frame(
+    year = johnDoe$data$發現年 + 1911,
+    month = johnDoe$data$發現月,
+    day = johnDoe$data$發現日
+  )
+chr_dates <- paste(df_dates$year, df_dates$month, df_dates$day)
+johnDoe$data$發現日期 <- lubridate::ymd(chr_dates)
+
+# 2.
+sum(is.na(johnDoe$data$發現日期))
+
+# 3.
+table(johnDoe$data$發現月)
+pick_month <- which.max(table(johnDoe$data$發現月))
+table(johnDoe$data$發現月)[pick_month]
+```
+
+EX4.17
+```{r}
+johnDoe$data |> View()
+
+# 1.
+season = ""
+pick_spring = johnDoe$data$發現月 %in% c(3, 4, 5)
+season[pick_spring] = "spring"
+pick_summer = johnDoe$data$發現月 %in% c(6, 7, 8)
+season[pick_summer] = "summer"
+pick_fall = johnDoe$data$發現月 %in% c(9, 10, 11)
+season[pick_fall] = "fall"
+pick_winter = johnDoe$data$發現月 %in% c(1, 2, 12)
+season[pick_winter] = "winter"
+
+johnDoe$data$發現季節 <- factor(
+  season, 
+  levels=c("spring", "summer", "fall", "winter")
+)
+  
+# 2.
+table(johnDoe$data$發現季節)
+```
+
+EX4.18
+```{r}
+majors <- c('economics','economics',NA,'economics','economics','economics','economics','statistics','law','economics','law')
+
+length(majors)
+table(majors)
+majors |> unique()
+majors |> table(useNA = "always")
+```
+
+EX4.19
+```{r}
+
 ```
 

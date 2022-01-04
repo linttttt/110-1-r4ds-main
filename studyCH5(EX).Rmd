@@ -97,3 +97,34 @@ for(.x in seq_along(pick3)){
 table(pick3)
 ```
 
+EX5.3
+```{r}
+a=1; b=-3; c=0; d=1
+# 1
+pick5_3_1=list(
+  q_star=(a-c)/(d-b), 
+  p_star=a+b*q_star
+)
+pick5_3_1
+```
+
+```{r}
+a=1; b=-3; c=0; d=1
+equilibrium1 <- solve_equilibrium()
+print(equilibrium1)
+a=2; b=-3; c=0; d=1
+equilibrium2 <- solve_equilibrium()
+print(equilibrium2)
+a=1; b=-3; c=0; d=1.5
+equilibrium3 <- solve_equilibrium()
+print(equilibrium3)
+```
+
+```{r, echo=FALSE}
+solve_equilibrium <- function(){
+  q_star <- (a-c)/(d-b)
+  p_star <- a+b*q_star
+  equilibrium <- list("q_star"=q_star, "p_star"=p_star)
+  equilibrium
+}
+```

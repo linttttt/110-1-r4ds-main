@@ -1,0 +1,81 @@
+```{r}
+ntpu_restaurants <- jsonlite::fromJSON("https://github.com/tpemartin/110-1-r4ds-main/raw/main/ntpu_restaurants.json")
+details_1stRestaurant <- 
+  jsonlite::fromJSON("https://github.com/tpemartin/110-1-r4ds-main/raw/main/ntpu_restaurants_details.json")
+
+View(ntpu_restaurants)
+View(details_1stRestaurant)
+
+ntpuLocation <- ntpu_restaurants$geometry$location
+ntpuLocation$lat <- as.numeric(ntpuLocation$lat)
+ntpuLocation$lng <- as.numeric(ntpuLocation$lng)
+
+class(ntpu_restaurants$price_level)
+```
+
+```{r}
+unique(ntpu_restaurants$vicinity)
+unlisted_vicinity <- {
+  ntpu_restaurants$vicinity |> 
+    stringr::str_split(", ") -> list_vicinity
+  
+  unlist(list_vicinity)
+}
+
+pick_reading3 <- 
+  stringr::str_detect(ntpu_restaurants$vicinity, stringr::coll("Road", ignore_case = T))
+
+```
+
+
+營業狀態
+```{r}
+ntpu_restaurants$business_status <-
+  factor(
+    unlist(ntpu_restaurants$business_status)
+    )
+opening <- split(ntpu_restaurants,
+                 ntpu_restaurants$business_status
+                 )
+
+class(ntpu_restaurants$business_status)
+
+View(opening)
+
+table(ntpu_restaurants$business_status)
+```
+
+
+Rating 分級
+```{r}
+ntpu_restaurants$rating <- 
+  as.numeric(ntpu_restaurants$rating)
+anyNA(ntpu_restaurants$rating)
+
+ntpuMaximalValues1 <- c(0, 1, 2, 3, 4, 5)
+
+ntpuStar1 <- cut(
+  ntpu_restaurants$rating, 
+  ntpuMaximalValues1,
+  include.lowest = TRUE
+  )
+
+table(ntpuStar1, useNA = "always")
+
+#細分
+ntpuMaximalValues2 <- c(3, 3.5, 4, 4.5, 5)
+
+ntpuStar2 <- cut(
+  ntpu_restaurants$rating, 
+  ntpuMaximalValues2,
+  include.lowest = TRUE
+  )
+
+table(ntpuStar2, useNA = "always")
+```
+
+
+
+
+
+

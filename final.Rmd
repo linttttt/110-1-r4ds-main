@@ -63,7 +63,7 @@ ntpuStar1 <- cut(
 table(ntpuStar1, useNA = "always")
 
 #細分
-ntpuMaximalValues2 <- c(3, 3.5, 4, 4.5, 5)
+ntpuMaximalValues2 <- c(0, 3, 3.5, 4, 4.5, 5)
 
 ntpuStar2 <- cut(
   ntpu_restaurants$rating, 
@@ -74,8 +74,43 @@ ntpuStar2 <- cut(
 table(ntpuStar2, useNA = "always")
 ```
 
+Ratings Total 餐廳評論數
+```{r}
+ntpu_restaurants$user_ratings_total <- 
+  as.numeric(ntpu_restaurants$user_ratings_total)
+anyNA(ntpu_restaurants$user_ratings_total)
+max(ntpu_restaurants$user_ratings_total, na.rm = T)
 
+ntpuMaximalValues3 <- c(0, 500, 1000, 1500, 2000, 2500)
 
+ntpuStar3 <- cut(
+  ntpu_restaurants$user_ratings_total, 
+  ntpuMaximalValues3,
+  include.lowest = TRUE
+  )
 
+table(ntpuStar3, useNA = "always")
+mean(ntpu_restaurants$user_ratings_total, na.rm = T)
+```
+
+Relationship 星數&評論數
+```{r}
+which(is.na(ntpu_restaurants$user_ratings_total))
+which(is.na(ntpu_restaurants$rating))
+
+ntpu_restaurants$rating_fct <- factor(ntpu_restaurants$rating)
+
+ntpu_restaurants$user_ratings_total_fct <- factor(ntpu_restaurants$user_ratings_total)
+
+relationship <- ntpu_restaurants$rating_fct:ntpu_restaurants$user_ratings_total_fct
+
+relationship %<>% sort()
+
+relationship[[1]]
+
+relationship2 <- ntpuStar2:ntpuStar3
+relationship2 %<>% sort()
+
+```
 
 

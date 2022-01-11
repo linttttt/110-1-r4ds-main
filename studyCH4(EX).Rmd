@@ -86,12 +86,23 @@ dataSet1$children[[2]][[2]]
 dataSet1$children[[3]][[1]]
 
 dfExercise$data2 <- data.frame(dataSet1$children)
+View(dfExercise$data2)
 ```
 
 EX 4.5
 ```{r}
-participations <- 
-list('session 3',c("session 1", "session 2", "session 3"),'session 3',c("session 2", "session 1"),c("session 3", "session 1"),c("session 3", "session 2", "session 1"),'session 2','session 1',c("session 2", "session 1", "session 3"),c("session 3", "session 1", "session 2"))
+participations <- list(
+  'session 3',
+  c("session 1", "session 2", "session 3"),
+  'session 3',
+  c("session 2", "session 1"),
+  c("session 3", "session 1"),
+  c("session 3", "session 2", "session 1"),
+  'session 2',
+  'session 1',
+  c("session 2", "session 1", "session 3"),
+  c("session 3", "session 1", "session 2")
+  )
 
 participations[[1]] 
 participations[[2]]
@@ -346,6 +357,55 @@ majors |> table(useNA = "always")
 
 EX4.19
 ```{r}
+wdi <- list()
+wdi$source[[1]] <- "https://databank.worldbank.org/source/world-development-indicators#"
+wdi$source[[2]] <- "https://docs.google.com/spreadsheets/d/1XHxjE3DIIdvNL-kbLR_bktxiHxmk23S6lUmn89WEedM/edit?usp=sharing"
+wdi$meta <- "https://docs.google.com/spreadsheets/d/1C8b-liC8Gl9Kmkexb5uq1_TUIE3lYOt4PutPlOne80g/edit?usp=sharing"
+wdi$data <- googlesheets4::read_sheet(
+  wdi$source[[2]]
+)
 
+View(wdi$data)
+
+# 1.
+wdiYear <- split(wdi$data,wdi$data$year)
+wdiYear2000 <- wdiYear$`2000`
+View(wdiYear2000)
+length(wdiYear2000$year)
+
+# 2.
+iso2c_nonCountry <- c('ZH','ZI','1A','S3','B8','V2','Z4','4E','T4','XC','Z7','7E','T7','EU','F1','XE','XD','XF','ZT','XH','XI','XG','V3','ZJ','XJ','T2','XL','XO','XM','XN','ZQ','XQ','T3','XP','XU','XY','OE','S4','S2','V4','V1','S1','8S','T5','ZG','ZF','T6','XT','1W')
+
+subsampleCountry2000 <- subset(
+  wdiYear2000, !(wdiYear2000$iso2c %in% iso2c_nonCountry)
+  )
+View(subsampleCountry2000)
+
+# 3.
+length(subsampleCountry2000$country)
+length(unique(subsampleCountry2000$country))
+
+# 4.
+browseURL(wdi$meta)
+
+observations <- list()
+summary <- subsampleCountry2000$EG.USE.PCAP.KG.OE
+View(summary)
+
+naSummary <- sum(is.na(summary))
+rangeSummary <- range(summary, na.rm=T)
+medianSummary <- median(summary, na.rm=T)
+meanSummary <- mean(summary, na.rm=T)
+
+allSummary <- list(
+    observations = length(summary),
+    missing = naSummary,
+    range = list(rangeSummary),
+    median= medianSummary,
+    mean= meanSummary
+  )
+
+View(allSummary)
+summary_df <- list2DF(allSummary)
 ```
 

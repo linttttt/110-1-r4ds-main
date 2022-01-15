@@ -9,6 +9,7 @@ View(ntpu_restaurants_fbf)
 View(ntpu_restaurants_obo)
 ```
 
+營業狀態
 ```{r business_status}
 businessStatus <- function(){
   cal <- list()
@@ -29,6 +30,7 @@ cal
 businessStatus()
 ```
 
+物價水平
 ```{r price_level}
 priceLevel <- function(){
   cal <- list()
@@ -47,6 +49,7 @@ cal
 priceLevel()
 ```
 
+評論星數
 ```{r rating}
 rating <- function(){
   cal <- list()
@@ -70,6 +73,7 @@ cal
 rating()
 ```
 
+道路
 ```{r road}
 vicinity <- function(){
   roadName <- list(c("Dade Road", "大德路"), c("Daguan Road", "大觀路"), c("Daxue Road", "大學路"), c("Dayi Road", "大義路"), c("Guoji 1st Street", "ˇ國際一街"), c("Guoji 2nd Street", "國際二街"), c("Guoxue Street", "國學街"), c("Xuefu Road", "學府路"), c("Xueqin Road", "學勤路"))
@@ -104,6 +108,7 @@ cal
 vicinity()
 ```
 
+評論總數
 ```{r}
 ratingsTotal <- function(){
   cal <- list()
@@ -131,6 +136,7 @@ cal
 ratingsTotal()
 ```
 
+評論總數分級
 ```{r}
 ntpu_restaurants_fbf$user_ratings_total <- 
   as.numeric(ntpu_restaurants_fbf$user_ratings_total)

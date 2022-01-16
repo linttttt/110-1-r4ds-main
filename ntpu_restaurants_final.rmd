@@ -1,4 +1,3 @@
-
 ```{r}
 ntpu_restaurants_fbf <- jsonlite::fromJSON("C:/Users/user/Desktop/RRR/learning~R/learning R class/final/ntpu_restaurants.json", simplifyDataFrame = T)
 ntpu_restaurants_obo <- jsonlite::fromJSON("C:/Users/user/Desktop/RRR/learning~R/learning R class/final/ntpu_restaurants.json", simplifyDataFrame = F)
@@ -6,10 +5,15 @@ ntpu_restaurants_obo <- jsonlite::fromJSON("C:/Users/user/Desktop/RRR/learning~R
 
 ```{r}
 View(ntpu_restaurants_fbf)
-View(ntpu_restaurants_obo)
+
+length(ntpu_restaurants_fbf$name)
+
 ```
 
-營業狀態
+1)營業狀態 2)物價水平 3)評論星數 4)道路搜尋 5)評論總數
+
+1)營業狀態
+
 ```{r business_status}
 businessStatus <- function(){
   cal <- list()
@@ -30,8 +34,11 @@ cal
 businessStatus()
 ```
 
-物價水平
+2)物價水平
+
 ```{r price_level}
+range(ntpu_restaurants_fbf$price_level)
+
 priceLevel <- function(){
   cal <- list()
   rstudioapi::showPrompt('', message="Input the price level value you want.\n(1 or 2)") -> price
@@ -49,8 +56,11 @@ cal
 priceLevel()
 ```
 
-評論星數
+3)評論星數
+
 ```{r rating}
+range(ntpu_restaurants_fbf$rating)
+
 rating <- function(){
   cal <- list()
   rstudioapi::showPrompt('', message="Input the lowest rating value you want.") -> value
@@ -73,7 +83,8 @@ cal
 rating()
 ```
 
-道路
+4)道路搜尋
+
 ```{r road}
 vicinity <- function(){
   roadName <- list(c("Dade Road", "大德路"), c("Daguan Road", "大觀路"), c("Daxue Road", "大學路"), c("Dayi Road", "大義路"), c("Guoji 1st Street", "ˇ國際一街"), c("Guoji 2nd Street", "國際二街"), c("Guoxue Street", "國學街"), c("Xuefu Road", "學府路"), c("Xueqin Road", "學勤路"))
@@ -108,7 +119,8 @@ cal
 vicinity()
 ```
 
-評論總數
+5)評論總數
+
 ```{r}
 ratingsTotal <- function(){
   cal <- list()
@@ -123,7 +135,7 @@ print(glue::glue(
 
 for (.x in seq_along(ratingTotal_higherThanOrEqualToValue$name)) {
   print(ratingTotal_higherThanOrEqualToValue$name[[.x]])
-  print(ratingTotal_higherThanOrEqualToValue$rating[[.x]])
+  print(ratingTotal_higherThanOrEqualToValue$user_ratings_total[[.x]])
 }
 
 cal$total <- length(
@@ -137,22 +149,25 @@ ratingsTotal()
 ```
 
 評論總數分級
+
 ```{r}
 ntpu_restaurants_fbf$user_ratings_total <- 
   as.numeric(ntpu_restaurants_fbf$user_ratings_total)
 
-max(ntpu_restaurants_fbf$user_ratings_total, na.rm = T)
+
 
 ntpuMaximalValues <- c(0, 500, 1000, 1500, 2000, 2500)
 
 ntpu_ratingTotal <- cut(
   ntpu_restaurants_fbf$user_ratings_total, 
-  ntpuMaximalValues3,
+  ntpuMaximalValues,
   include.lowest = TRUE
   )
 
 View(table(ntpu_ratingTotal, useNA = "always"))
 mean(ntpu_restaurants_fbf$user_ratings_total, na.rm = T)
-max(ntpu_restaurants_fbf$user_ratings_total, na.rm = T)
-```
+totalRating_max <- which.max(
+ntpu_restaurants_fbf$user_ratings_total)
 
+ntpu_restaurants_fbf$name[[totalRating_max]]
+```

@@ -1,0 +1,148 @@
+5.3 Task by situation
+```{r}
+oneComingStudentMajor <- sample(c("Economics", "Sociology"), 1)
+print(oneComingStudentMajor)
+
+# oneComingStudentMajor == "Economics"
+print("Please go to room 201.")
+# oneComingStudentMajor == "Sociology"
+print("Please go to room 301.")
+```
+
+
+5.3.1 if
+```{r}
+oneComingStudentMajor <- sample(c("Economics", "Sociology"), 1)
+print(oneComingStudentMajor)
+
+if(oneComingStudentMajor == "Economics"){
+  print("Please go to room 201.")
+}
+if(oneComingStudentMajor == "Sociology"){
+  print("Please go to room 301.")
+}
+```
+
+```{r}
+if(T){print("TRUE block")}
+if(F){print("FALSE block")}
+
+if(c(T,T)){print("TT")}
+if(c(T,F)){print("TF")}
+if(c(F,F)){print("FF")}
+if(c(F,T)){print("FT")}
+
+Sys.setenv("_R_CHECK_LENGTH_1_CONDITION_" = "true")
+```
+
+```{r}
+if(c("a", "b")=="a"){print("case 1")}
+if(any(c("a", "b")=="a")){print("case 2")}
+if(all(c("a", "b")=="a")){print("case 3")}
+
+if(isTRUE(T)){print("case 1")}
+if(isTRUE("a")){print("case 2")}
+if(isTRUE(c(T,T))){print("case 3")}
+if(isTRUE(NA)){print("case 4")}
+```
+
+```{r}
+rstudioapi::showPrompt('', message="Input r for rock, p for paper, or s for scissor") -> userChoice
+
+computerChoice <- sample(c("r", "p", "s"), 1)
+
+print(glue::glue("You chose {userChoice}, computer chose {computerChoice}"))
+
+combination <- paste0(userChoice, computerChoice)
+
+flag_userwin <- combination %in% c("rs", "sp", "pr")
+flag_computerwin <- combination %in% c("sr", "ps", "pr")
+flag_tie <- combination %in% c("rr", "ss", "pp")
+
+if(flag_userwin){print("You won.")}
+if(flag_computerwin){print("Computer won.")}
+if(flag_tie){print("There is a tie.")}
+```
+
+```{r}
+get_rock_paper_scissor_combination <- function(){
+  rstudioapi::showPrompt('', message="Input r for rock, p for paper, or s for scissor") -> userChoice
+  
+  computerChoice <- sample(c("r", "p", "s"), 1)
+  
+  print(glue::glue("You chose {userChoice}, computer chose {computerChoice}"))
+  
+  outcome <- c("user"=userChoice, "computer"=computerChoice)
+  
+  return(outcome)
+}
+```
+
+
+5.3.2 else if
+```{r}
+outcome <- get_rock_paper_scissor_combination()
+combination <- paste(outcome, collapse="")
+
+if(combination %in% c("rs", "sp", "pr")){print("You won.")} else
+if(combination %in% c("sr", "ps", "rp")){print("Computer won.")} else
+if(combination %in% c("rr", "ss", "pp")){print("There is a tie.")}
+```
+
+
+5.3.3 else
+```{r}
+outcome <- get_rock_paper_scissor_combination()
+combination <- paste(outcome, collapse="")
+
+if(combination %in% c("rs", "sp", "pr")){print("You won.")} else
+if(combination %in% c("sr", "ps", "rp")){print("Computer won.")} else
+{print("There is a tie.")}
+```
+
+
+5.3.4 && and ||
+```{r}
+outcome <- get_rock_paper_scissor_combination()
+combination <- paste(outcome, collapse="")
+
+flag_valid <- outcome[["user"]] %in% c("r", "s", "p")
+# r > s > p > r
+if(flag_valid & combination %in% c("rs", "sp", "pr")){print("You won.")} else
+if(flag_valid & combination %in% c("sr", "ps", "rp")){print("Computer won.")} else
+if(flag_valid){print("There is a tie.")} else
+{print("Please input only r, s or p.")}
+```
+
+```{r}
+outcome <- get_rock_paper_scissor_combination()
+combination <- paste(outcome, collapse="")
+
+flag_valid <- outcome[["user"]] %in% c("r", "s", "p")
+# r > s > p > r
+if(flag_valid && combination %in% c("rs", "sp", "pr")){print("You won.")} else
+if(flag_valid && combination %in% c("sr", "ps", "rp")){print("Computer won.")} else
+if(flag_valid){print("There is a tie.")} else
+{print("Please input only r, s or p.")}
+```
+
+```{r}
+TRUE || x # will return TRUE even x is unknown.
+TRUE | x # will return ERROR
+FALSE && x # will return FALSE even x is unknown.
+FALSE & x # will return ERROR
+```
+
+```{r}
+outcome <- get_rock_paper_scissor_combination()
+combination <- paste(outcome, collapse="")
+
+flag_valid <- outcome[["user"]] %in% c("r", "s", "p")
+# r > s > p > r
+if(!flag_valid){
+  print("Please input only r, s or p.")
+} else
+if(combination %in% c("rs", "sp", "pr")){print("You won.")} else
+if(combination %in% c("sr", "ps", "rp")){print("Computer won.")} else
+{print("There is a tie.")}
+```

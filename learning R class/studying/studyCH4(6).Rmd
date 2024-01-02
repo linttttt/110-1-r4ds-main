@@ -1,0 +1,269 @@
+4.6.4 Common situations on different vectors
+```{r}
+hobby = c(
+  'sport, reading, movie',
+  'sport',
+  'movie, sport, reading',
+  'movie, Reading',
+  'sport')
+
+hobby %in% "reading"
+'sport, reading, movie' %in% "reading"
+
+
+stringr::str_detect(hobby, "reading")
+stringr::str_detect(hobby, stringr::coll("reading", ignore_case = T))
+
+
+```
+
+```{r}
+table(hobby)
+
+hobby1 <- stringr::str_split(
+  hobby[[1]],
+  pattern = ", ")
+
+table(hobby1)
+
+unlisted_hobbies <- {
+  hobby |> 
+    stringr::str_split(", ") -> list_hobbies
+  
+  unlist(list_hobbies)
+}
+
+unlisted_hobbies
+table(unlisted_hobbies)
+toupper(unlisted_hobbies)
+tolower(unlisted_hobbies)
+```
+
+```{r}
+pick_reading1 <- 
+  stringr::str_detect(hobby, "reading")
+pick_reading2 <- 
+  stringr::str_detect(hobby, stringr::coll("reading", ignore_case = T))
+
+which(pick_reading2)
+```
+
+```{r}
+df_dates =
+  data.frame(
+    year = c('2001','2001','2002','2001','2001'),
+    month = c('4','10','1','1','4'),
+    day = c('3','3','22','18','3')
+  )
+
+df_dates$date <- lubridate::ymd(c(
+  "2001 4 3", "2001 10 3", "2002 1 22", "2001 1 18", "2001  4 3"))
+df_dates$date |> class()
+```
+
+```{r}
+chr_dates <- paste(df_dates$year, df_dates$month, df_dates$day, sep = "-")
+chr_dates 
+chr_dates |> class()
+dates <- lubridate::ymd(chr_dates)
+dates
+```
+
+
+Factor vector
+```{r}
+students <-
+  data.frame(
+    major = c('economics','sociology','economics','sociology','sociology','finance','sociology','statistics','statistics','sociology'),
+    year= c(4,1,4,3,1,4,4,2,1,3),
+    credits= c(16,13,10,21,17,12,21,15,20,17)
+  )
+
+students$major |> unique()
+```
+
+```{r}
+school = ""
+{
+  pick_those = students$major %in% 
+    c("economics", "sociology")
+  school[pick_those] = "social science"
+  
+  pick_those = students$major %in% 
+    c("statistics", "finance")
+  school[pick_those] = "business"
+}
+
+school
+```
+
+```{r}
+school = factor(students$major)
+{
+  levels(school) <- 
+    c("social science","business","social science","business")
+  
+  school
+}
+
+school
+
+students$year1 <- factor(students$year)
+levels(students$year1) <- c(
+  "freshman", "sophemore", "junior", "senior"
+)
+students$year1
+```
+
+```{r}
+workload <- character(10)
+workload[c(3, 6)] <- "light"
+workload[c(1, 2, 5, 8, 9, 10)] <- "normal"
+workload[c(4, 7)] <- "heavy"
+workload
+
+pick_those = students$credits <= 12
+workload[pick_those] <- "light"
+pick_those = (students$credits >= 13) |
+  (students$credits <= 20)
+workload[pick_those] <- "normal"
+pick_those = students$credits > 20
+workload[pick_those] <- "heavy"
+workload
+```
+
+```{r}
+workload <- factor(students$credits)
+levels(workload) <- c(rep("light", 2), rep("normal", 5), "heavy")
+workload
+```
+
+```{r}
+maximalValues <- c(0, 12, 20, 30)
+workload <-
+cut(
+  students$credits, 
+  maximalValues)
+
+levels(workload) <- c("light", "normal", "heavy")
+workload
+```
+
+```{r}
+credits2 <- c(0, students$credits)
+cut(
+  credits2, 
+  maximalValues
+)
+
+cut(
+  credits2, 
+  maximalValues,
+  include.lowest = TRUE
+  ) -> workload1
+levels(workload1) <- c("light", "normal", "heavy")
+workload1
+```
+
+
+4.7 Summarise one vector
+```{r}
+dates <- c('2016-11-15','NA','NA','1997-05-07','1995-08-25','2002-09-20','NA','NA','NA','1995-07-16', '2011-06-22')
+grades <- c(29,53,26,27,55,69,NA,NA,63,NA,56)
+genders <- c('Male','Female','Male','Male','Female','Female',NA,'Male','Male','Female','Female')
+majors <- c('economics','economics',NA,'economics','economics','economics','economics','statistics','law','economics','law')
+
+dataSets <-
+  data.frame(
+    date = dates,
+    grade = grades,
+    gender = genders,
+    major = majors
+  )
+View(dataSets)
+```
+
+```{r}
+dataSets$date |> class()
+dataSets$date |> lubridate::ymd() -> dataSets$date
+dataSets$date |> class()
+
+analysis$data <- dataSets
+```
+
+```{r}
+analysis <- list()
+anyNA(dates)
+dates |> is.na() |> sum() -> analysis$dates$na$sum
+anyNA(grades)
+grades |> is.na() |> sum() -> analysis$grades$na$sum
+
+saveRDS(analysis, file = "analysis.RDS")
+analysis = readRDS("analysis.RDS")
+```
+
+```{r}
+dates <- analysis$data$date
+
+class(dates)
+typeof(dates)
+dates |> range()
+dates |> range(na.rm=T) -> analysis$dates$range
+analysis$dates$range
+grades |> range(na.rm=T) -> analysis$grades$range
+analysis$grades$range
+grades |> median(na.rm=T) -> analysis$grades$mdian
+analysis$grades$mdian
+grades |> mean(na.rm=T) -> analysis$grades$mean
+analysis$grades$mean
+```
+
+```{r}
+genders <- analysis$data$gender
+genders |> class()
+genders |> factor() -> genders
+
+genders |> levels()
+genders |> unique()
+```
+
+```{r}
+majors <- analysis$data$major
+majors |> class()
+majors |> unique()
+majors |> is.na() |> sum() -> analysis$majors$na$sum
+majors |> factor() -> analysis$data$major
+levels(majors)
+table(majors)
+```
+
+```{r}
+dataSet0 <- 
+  data.frame(
+    dates = c('2016-11-15','1997-05-07','NA','NA','1997-05-07','1995-08-25','2002-09-20','NA','NA','NA','1995-07-16', '2011-06-22', '2016-11-15'),
+    grades = c(29,27, 53,26,27,55,69,NA,NA,63,NA,56, 29),
+    genders = c('Male','Male', 'Female','Male','Male','Female','Female',NA,'Male','Male','Female','Female','Male'),
+    majors = c('economics','economics', 'economics',NA,'economics','economics','economics','economics','statistics','law','economics','law','economics')
+)
+
+View(dataSet0)
+duplicated(dataSet0)
+whichIsDuplicated <- which(duplicated(dataSet0))
+dataSet0[whichIsDuplicated, ]
+
+dataSet0 <- unique(dataSet0)
+dataSet0 |> duplicated() |> which()
+View(dataSet0)
+```
+
+```{r}
+genders |> table()
+genders |> table(useNA = "always") -> analysis$genders$table
+analysis$genders$table
+
+analysis = readRDS("analysis.RDS")
+analysis$genders$table
+```
+
+
+

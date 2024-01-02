@@ -1,0 +1,306 @@
+5.1.1 For each observation
+```{r}
+dataSet <- list(
+  list(
+    gender="male", height=178, age=32,
+    children=list(
+      list(gender="male", age=5),
+      list(gender="male", age=0))
+  ),
+  list(
+    gender="female", height=166, age=30,
+    children=list(
+      list(gender="female", age=3))
+  ),
+  list(
+    gender="male", height=170, age=42,
+    children=list(
+      list(gender="male", age=10),
+      list(gender="female", age=8))
+  ),
+  list(
+    gender="male", height=188, age=22,
+    children=list()
+  ),  
+  list(
+    gender="male", height=172, age=52,
+    children=list(
+      list(gender="female", age=25),
+      list(gender="female", age=23))
+  ),
+  list(
+    gender="female", height=160, age=42,
+    children=list(
+      list(gender="female", age=11))
+  )
+)
+```
+
+```{r}
+analysis <- list()
+analysis$number_of_children <- list()
+
+analysis$number_of_children[[1]] <-length(dataSet[[1]]$children)
+analysis$number_of_children[[2]] <-length(dataSet[[2]]$children)
+analysis$number_of_children[[3]] <-length(dataSet[[3]]$children)
+analysis$number_of_children[[4]] <-length(dataSet[[4]]$children)
+analysis$number_of_children[[5]] <-length(dataSet[[5]]$children)
+analysis$number_of_children[[6]] <-length(dataSet[[6]]$children)
+```
+
+
+5.1.2 Information container
+```{r}
+analysis <- list()
+analysis$number_of_children <- vector("list", length=6)
+
+analysis$number_of_children[[1]] <-length(dataSet[[1]]$children)
+analysis$number_of_children[[2]] <-length(dataSet[[2]]$children)
+analysis$number_of_children[[3]] <-length(dataSet[[3]]$children)
+analysis$number_of_children[[4]] <-length(dataSet[[4]]$children)
+analysis$number_of_children[[5]] <-length(dataSet[[5]]$children)
+analysis$number_of_children[[6]] <-length(dataSet[[6]]$children)
+```
+
+
+5.1.3 For loop
+```{r}
+for(.x in c(1, 2, 3, 4, 5, 6)){
+  analysis$number_of_children[[.x]] <-length(dataSet[[.x]]$children)
+}
+
+c(1, 2, 3, 4, 5, 6)
+1:6
+1:length(dataSet)
+seq_along(dataSet)
+dataSet0 <- list()
+seq_along(dataSet0) # a vector of nothing
+```
+
+```{r}
+analysis <- list()
+analysis$number_of_children <- vector("list", length=6)
+for(.x in seq_along(dataSet)){
+  analysis$number_of_children[[.x]] <-length(dataSet[[.x]]$children)
+}
+
+class(analysis$number_of_children)
+```
+
+
+5.1.4 For each group
+```{r}
+dataSet1 <- 
+  data.frame(
+    team=c('team 2','team 3','team 1','team 2','team 3','team 1','team 2','team 1','team 3','team 2','team 3','team 1','team 3','team 1','team 2'),
+    entranceYear = c(100,100,101,100,100,100,101,100,100,101,101,100,101,100,100),
+    grade=c(98,95,76,87,67,83,84,94,70,64,99,77,89,62,65)
+  )
+```
+
+```{r}
+split(dataSet1, dataSet1$team) -> grouped_dataset1
+
+View(grouped_dataset1)
+```
+
+```{r}
+split(dataSet1, dataSet1$team) -> grouped_dataset1
+
+group_meanGrades <- vector("double", length(grouped_dataset1))
+for(.x in seq_along(grouped_dataset1)){
+  group_meanGrades[[.x]] <- mean(grouped_dataset1[[.x]]$grade)
+}
+```
+
+```{r}
+dataSet1$team |> factor() -> dataSet1$team
+dataSet1$entranceYear |> factor() -> dataSet1$entranceYear
+dataSet1$team:dataSet1$entranceYear -> .interaction
+print(.interaction)
+dataSet1$interaction <- .interaction
+View(dataSet1)
+
+dataSet1 |> 
+  split(.interaction) -> grouped_dataSets2
+
+View(grouped_dataSets2)
+```
+
+
+5.2 Systematic analysis
+```{r}
+dataSet3 <-
+  data.frame(
+    dates = c("2016-11-15", NA, NA, "1997-05-07", "1995-08-25", "2002-09-20", NA, NA, NA, "1995-07-16", "2011-06-22"),
+    grades = c(29, 53, 26, 27, 55, 69, NA, NA, 63, NA, 56),
+    genders = c("Male", "Female", "Male", "Male", "Female", "Female", NA, "Male", "Male", "Female", "Female"),
+    majors = c("economics", "economics", NA, "economics", "economics", "economics", "economics", "statistics", "law", "economics", "law")
+  )
+```
+
+```{r}
+class_check <- vector("integer", length(dataSet3))
+for(.x in seq_along(dataSet3)){
+  class_check[[.x]] <- class(dataSet3[[.x]])
+}
+names(class_check) <- names(dataSet3)
+class_check
+
+na_check <- vector("integer", length(dataSet3))
+for(.x in seq_along(dataSet3)){
+  na_check[[.x]] <- sum(is.na(dataSet3[[.x]]))
+}
+names(na_check) <- names(dataSet3)
+na_check
+
+class_check <- check_class(dataSet3)
+na_check <- check_na(dataSet3)
+```
+
+
+5.2.1 Function as reusable programming block
+```{r}
+class_check <- {
+  class_check <- vector("integer", length(dataSet3))
+  for(.x in seq_along(dataSet3)){
+    class_check[[.x]] <- class(dataSet3[[.x]])
+  }
+  names(class_check) <- names(dataSet3)
+  class_check
+}
+
+na_check <- {
+  na_check <- vector("integer", length(dataSet3))
+  for(.x in seq_along(dataSet3)){
+    na_check[[.x]] <- sum(is.na(dataSet3[[.x]]))
+  }
+  names(na_check) <- names(dataSet3)
+  na_check
+}
+```
+
+```{r}
+dataSet4 = data.frame(
+  x = c(6,10,10,6,10,6,NA,NA,3,7),
+  y = c(2,3,6,6,8,2,8,6,8,3)
+)
+
+dataSet3 = data.frame(
+    dates = c("2016-11-15", NA, NA, "1997-05-07", "1995-08-25", "2002-09-20", NA, NA, NA, "1995-07-16", "2011-06-22"),
+    grades = c(29, 53, 26, 27, 55, 69, NA, NA, 63, NA, 56),
+    genders = c("Male", "Female", "Male", "Male", "Female", "Female", NA, "Male", "Male", "Female", "Female"),
+    majors = c("economics", "economics", NA, "economics", "economics", "economics", "economics", "statistics", "law", "economics", "law")
+  )
+
+class_check <- {
+  class_check <- vector("integer", length(dataSet3))
+  for(.x in seq_along(dataSet3)){
+    class_check[[.x]] <- class(dataSet3[[.x]])
+  }
+  names(class_check) <- names(dataSet3)
+  class_check
+}
+na_check <- {
+  na_check <- vector("integer", length(dataSet3))
+  for(.x in seq_along(dataSet3)){
+    na_check[[.x]] <- sum(is.na(dataSet3[[.x]]))
+  }
+  names(na_check) <- names(dataSet3)
+  na_check
+}
+  
+dataSet4 = data.frame(
+  x = c(6,10,10,6,10,6,NA,NA,3,7),
+  y = c(2,3,6,6,8,2,8,6,8,3)
+  )
+dataSet3 <- dataSet4
+
+class_check <- {
+  class_check <- vector("integer", length(dataSet3))
+  for(.x in seq_along(dataSet3)){
+    class_check[[.x]] <- class(dataSet3[[.x]])
+  }
+  names(class_check) <- names(dataSet3)
+  class_check
+}
+na_check <- {
+  na_check <- vector("integer", length(dataSet3))
+  for(.x in seq_along(dataSet3)){
+    na_check[[.x]] <- sum(is.na(dataSet3[[.x]]))
+  }
+  names(na_check) <- names(dataSet3)
+  na_check
+}
+```
+
+```{r}
+check_class <- function(){
+  class_check <- vector("integer", length(dataSet3))
+  for(.x in seq_along(dataSet3)){
+    class_check[[.x]] <- class(dataSet3[[.x]])
+  }
+  names(class_check) <- names(dataSet3)
+  class_check
+}
+
+check_na <- function(){
+  na_check <- vector("integer", length(dataSet3))
+  for(.x in seq_along(dataSet3)){
+    na_check[[.x]] <- sum(is.na(dataSet3[[.x]]))
+  }
+  names(na_check) <- names(dataSet3)
+  na_check
+}
+```
+
+```{r}
+check_class <- function(){
+  class_check <- vector("integer", length(dataSet3))
+  for(.x in seq_along(dataSet3)){
+    class_check[[.x]] <- class(dataSet3[[.x]])
+  }
+  names(class_check) <- names(dataSet3)
+  class_check
+}
+check_na <- function(){
+  na_check <- vector("integer", length(dataSet3))
+  for(.x in seq_along(dataSet3)){
+    na_check[[.x]] <- sum(is.na(dataSet3[[.x]]))
+  }
+  names(na_check) <- names(dataSet3)
+  na_check
+}
+
+dataSet3 = data.frame(
+    dates = c("2016-11-15", NA, NA, "1997-05-07", "1995-08-25", "2002-09-20", NA, NA, NA, "1995-07-16", "2011-06-22"),
+    grades = c(29, 53, 26, 27, 55, 69, NA, NA, 63, NA, 56),
+    genders = c("Male", "Female", "Male", "Male", "Female", "Female", NA, "Male", "Male", "Female", "Female"),
+    majors = c("economics", "economics", NA, "economics", "economics", "economics", "economics", "statistics", "law", "economics", "law")
+  )
+
+class_check1 <- check_class()
+na_check1 <- check_na()
+
+dataSet4 = data.frame(
+  x = c(6,10,10,6,10,6,NA,NA,3,7),
+  y = c(2,3,6,6,8,2,8,6,8,3)
+  )
+dataSet3 = dataSet4
+
+class_check2 <- check_class()
+na_check2 <- check_na()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

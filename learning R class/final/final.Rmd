@@ -1,0 +1,126 @@
+```{r}
+ntpu_restaurants <- jsonlite::fromJSON("https://github.com/tpemartin/110-1-r4ds-main/raw/main/ntpu_restaurants.json")
+details_1stRestaurant <- 
+  jsonlite::fromJSON("https://github.com/tpemartin/110-1-r4ds-main/raw/main/ntpu_restaurants_details.json")
+
+View(ntpu_restaurants)
+View(details_1stRestaurant)
+
+ntpuLocation <- ntpu_restaurants$geometry$location
+ntpuLocation$lat <- as.numeric(ntpuLocation$lat)
+ntpuLocation$lng <- as.numeric(ntpuLocation$lng)
+
+class(ntpu_restaurants$price_level)
+```
+
+```{r}
+unique(ntpu_restaurants$vicinity)
+unlisted_vicinity <- {
+  ntpu_restaurants$vicinity |> 
+    stringr::str_split(", ") -> list_vicinity
+  
+  unlist(list_vicinity)
+}
+
+pick_reading3 <- 
+  stringr::str_detect(ntpu_restaurants$vicinity, stringr::coll("Road", ignore_case = T))
+
+```
+
+
+營業狀態
+```{r}
+ntpu_restaurants$business_status <-
+  factor(
+    unlist(ntpu_restaurants$business_status)
+    )
+opening <- split(ntpu_restaurants,
+                 ntpu_restaurants$business_status
+                 )
+
+class(ntpu_restaurants$business_status)
+
+View(opening)
+
+table(ntpu_restaurants$business_status)
+```
+
+
+Rating 分級
+```{r}
+ntpu_restaurants$rating <- 
+  as.numeric(ntpu_restaurants$rating)
+anyNA(ntpu_restaurants$rating)
+
+ntpuMaximalValues1 <- c(0, 1, 2, 3, 4, 5)
+
+ntpuStar1 <- cut(
+  ntpu_restaurants$rating, 
+  ntpuMaximalValues1,
+  include.lowest = TRUE
+  )
+
+table(ntpuStar1, useNA = "always")
+
+#細分
+ntpuMaximalValues2 <- c(0, 3, 3.5, 4, 4.5, 5)
+
+ntpuStar2 <- cut(
+  ntpu_restaurants$rating, 
+  ntpuMaximalValues2,
+  include.lowest = TRUE
+  )
+
+table(ntpuStar2, useNA = "always")
+```
+
+Ratings Total 餐廳評論數
+```{r}
+ntpu_restaurants$user_ratings_total <- 
+  as.numeric(ntpu_restaurants$user_ratings_total)
+anyNA(ntpu_restaurants$user_ratings_total)
+max(ntpu_restaurants$user_ratings_total, na.rm = T)
+
+ntpuMaximalValues3 <- c(0, 500, 1000, 1500, 2000, 2500)
+
+ntpuStar3 <- cut(
+  ntpu_restaurants$user_ratings_total, 
+  ntpuMaximalValues3,
+  include.lowest = TRUE
+  )
+
+table(ntpuStar3, useNA = "always")
+mean(ntpu_restaurants$user_ratings_total, na.rm = T)
+```
+
+Relationship 星數&評論數
+```{r}
+which(is.na(ntpu_restaurants$user_ratings_total))
+which(is.na(ntpu_restaurants$rating))
+
+ntpu_restaurants$rating_fct <- factor(ntpu_restaurants$rating)
+
+ntpu_restaurants$user_ratings_total_fct <- factor(ntpu_restaurants$user_ratings_total)
+
+relationship <- ntpu_restaurants$rating_fct:ntpu_restaurants$user_ratings_total_fct
+
+relationship %<>% sort()
+
+relationship[[1]]
+
+relationship2 <- ntpuStar2:ntpuStar3
+relationship2 %<>% sort()
+
+```
+
+```{r}
+length(rating_higherThanOrEqualToValue$rating)/length(ntpu_restaurants_fbf$rating)*100
+
+round(length(rating_higherThanOrEqualToValue$rating)/length(ntpu_restaurants_fbf$rating)*100, 2)
+```
+
+
+
+
+
+

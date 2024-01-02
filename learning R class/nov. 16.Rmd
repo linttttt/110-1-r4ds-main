@@ -1,0 +1,33 @@
+```{r}
+personName_nameValuePair <- c("the_1st_person" <- "John", "the_second_person" <- "Mary")
+the_1st_person
+personName_nameValuePair
+
+
+```
+
+```{r}
+JohnsFamily <-
+  list(
+    name = "John", 
+    age = 35,
+    spouse = list(
+      name = "Mary", 
+      age = 32),
+    children = list(
+      list(
+        name = "Bill", 
+        age = 5),
+      list(
+        name = "Jane", 
+        age = 3)
+    )
+  )
+```
+
+```{r}
+fncallExample <- list("John", 35, covid19Positive=FALSE)
+length(fncallExample)
+names(fncallExample)
+```
+

@@ -1,0 +1,7 @@
+Sys.setenv(LANG = "en")
+library(htmltools)
+library(econWeb)
+library(processx)
+library(rvest)
+library(xml2)
+library(webdriver)
